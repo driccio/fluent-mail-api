@@ -1,3 +1,10 @@
+h1. About this forked repository
+This is a forked reposity of https://github.com/guilhermechapiewski/fluent-mail-api
+Aiming to add new features listed as below:
+  * Maven build support.
+  * HTML email body support.
+
+
 h1. About
 
 *Fluent Mail API* is a simple Java API that uses Sun's "JavaMail API":http://java.sun.com/products/javamail/ to send e-mail messages.
