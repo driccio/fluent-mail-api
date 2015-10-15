@@ -1,23 +1,14 @@
 package com.guilhermechapiewski.fluentmail.transport;
 
-import java.util.Calendar;
-import java.util.Properties;
+import com.guilhermechapiewski.fluentmail.email.Email;
+import com.sun.mail.smtp.SMTPTransport;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Multipart;
-import javax.mail.NoSuchProviderException;
-import javax.mail.Session;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
-
-import com.guilhermechapiewski.fluentmail.email.Email;
-import com.sun.mail.smtp.SMTPTransport;
+import javax.mail.*;
+import javax.mail.internet.*;
+import java.util.Calendar;
+import java.util.Properties;
 
 public class PostalService {
 
@@ -89,9 +80,18 @@ public class PostalService {
 		SMTPTransport smtpTransport = (SMTPTransport) getSession()
 				.getTransport(getProtocol());
 		if (emailTransportConfig.isAuthenticationRequired()) {
-			smtpTransport.connect(emailTransportConfig.getSmtpServer(),
-					emailTransportConfig.getUsername(), emailTransportConfig
-							.getPassword());
+            // Host can be defined with scheme server:port
+            String[] hostSplit = emailTransportConfig.getSmtpServer().split(":");
+
+            if (hostSplit.length == 2) {
+                smtpTransport.connect(hostSplit[0], Integer.parseInt(hostSplit[1]),
+                        emailTransportConfig.getUsername(), emailTransportConfig
+                        .getPassword());
+            } else {
+                smtpTransport.connect(hostSplit[0],
+                        emailTransportConfig.getUsername(), emailTransportConfig
+                        .getPassword());
+            }
 		} else {
 			smtpTransport.connect();
 		}
